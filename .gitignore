@@ -1,0 +1,19 @@
+node_modules
+dist
+dist-ssr
+coverage
+.vite
+.vercel
+.DS_Store
+*.log
+
+# env files — keep the example, ignore everything else
+.env*
+!.env.example
+
+# screenshot outputs (mockup comparisons)
+shots/
+
+# Playwright
+playwright-report/
+test-results/
