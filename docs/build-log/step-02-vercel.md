@@ -6,7 +6,7 @@ your home wifi isn't. From now on, you test on the Vercel preview on your phone.
 
 ## What was built
 
-- **`api/[[...route]].ts`** — one Vercel Function that holds a tiny
+- **`api/[...route].ts`** — one Vercel Function that holds a tiny
   [Hono](https://hono.dev) app. Hono is a small, fast web framework (like
   Express but modern). We put every `/api/*` route into this single file
   because it's cheaper (one cold start) and lets Hono handle the internal
@@ -21,19 +21,23 @@ your home wifi isn't. From now on, you test on the Vercel preview on your phone.
     have a time limit; 60 seconds is enough for the longest AI call we'll
     make (step 16).
 
-### Why `[[...route]].ts` (double brackets)?
+### Why `[...route].ts` (single-bracket catch-all)?
 
-Vercel's file-based routing supports three catch-all shapes:
+Vercel's file-based routing for a bare `api/` folder (not Next.js) supports
+these shapes:
 - `api/foo.ts` → matches `/api/foo` only
-- `api/[...slug].ts` → catch-all, requires at least one segment
-- `api/[[...slug]].ts` → **optional** catch-all — matches `/api` on its own too
+- `api/[...slug].ts` → catch-all, matches every path under `/api/`
 
-Hono wants to see every `/api/*` path so it can route internally, so the
-optional catch-all is the right choice. The Hono docs ship this exact pattern.
+`api/[[...slug]].ts` (double brackets, "optional" catch-all) is a Next.js
+convention — Vercel's generic function router doesn't register it, so the
+route 404s. We initially used that filename from the BUILD_PLAN and
+`/api/health` returned a 404; renaming to the single-bracket catch-all fixed
+it. All SPEC §5 routes have at least one segment after `/api/`, so the
+"optional" behaviour isn't needed.
 
 ## Files changed
 
-- `api/[[...route]].ts` (new)
+- `api/[...route].ts` (new)
 - `vercel.json` (new)
 - `tsconfig.node.json` (now includes `api/**/*.ts` so `tsc` typechecks the
   function file)
@@ -42,7 +46,7 @@ optional catch-all is the right choice. The Hono docs ship this exact pattern.
 
 ## Explanations
 
-### Hono (`api/[[...route]].ts`)
+### Hono (`api/[...route].ts`)
 - **What it is.** A small web framework. You attach routes to an `app`
   object (`app.get('/foo', handler)`) and export it via
   `handle(app)` from `hono/vercel` so Vercel can call it like any serverless
