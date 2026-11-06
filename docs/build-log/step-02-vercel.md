@@ -17,9 +17,14 @@ your home wifi isn't. From now on, you test on the Vercel preview on your phone.
   - `rewrites` — any path that is **not** `api/…` is rewritten to
     `/index.html`. That's the classic "single-page app fallback" — the browser
     then lets React Router pick the right page based on the URL.
-  - `functions."api/[[...route]].ts".maxDuration = 60` — serverless functions
-    have a time limit; 60 seconds is enough for the longest AI call we'll
-    make (step 16).
+- The function runs on Vercel's **Edge** runtime (`export const config =
+  { runtime: 'edge' }` in the function file). Hono's `handle` adapter returns
+  a Web-standard Fetch handler, which the Edge runtime speaks natively. We
+  first tried the Node runtime (Vercel's default) and the function hung until
+  Vercel killed it with `FUNCTION_INVOCATION_TIMEOUT` — Node expects the old
+  `(req, res)` style and doesn't know to await a returned `Response`. Edge
+  runtime also has lower cold-start latency. Per-route time limits can be
+  raised later via `export const config = { maxDuration: N }` if we need it.
 
 ### Why `[...route].ts` (single-bracket catch-all)?
 
