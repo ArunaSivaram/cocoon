@@ -1,22 +1,24 @@
-import { format } from 'date-fns';
+import { useState } from 'react';
 import { Layout } from '@/app/Layout';
-import { DevEntriesProbe } from '@/components/dev/DevEntriesProbe';
+import { FirstTimeHint } from '@/components/home/FirstTimeHint';
+import { MicCard } from '@/components/home/MicCard';
+import { PastEntries } from '@/components/home/PastEntries';
+import { TypeCard } from '@/components/home/TypeCard';
+import { formatHomeDate } from '@/lib/dates';
 
 export function Home() {
-  const today = format(new Date(), 'EEEE, MMMM d');
+  const [mode, setMode] = useState<'voice' | 'typed'>('voice');
+  const today = formatHomeDate(new Date());
 
   return (
     <Layout title="Today's page" date={today}>
-      <section className="paper-sheet p-6 md:p-8">
-        <p className="text-ink-soft">
-          Placeholder — the mic card, &ldquo;Rather type it?&rdquo; mode, and past entries are
-          built in step 7 (SPEC §2.2 &amp; §2.3).
-        </p>
-        <div className="mt-6 border-t border-rule/60 pt-4">
-          <p className="label-eyebrow mb-2">Dev probe · past entries</p>
-          <DevEntriesProbe />
-        </div>
-      </section>
+      <FirstTimeHint />
+      {mode === 'voice' ? (
+        <MicCard onSwitchToTyped={() => setMode('typed')} />
+      ) : (
+        <TypeCard onSwitchToVoice={() => setMode('voice')} />
+      )}
+      <PastEntries className="mt-8 md:mt-10" />
     </Layout>
   );
 }

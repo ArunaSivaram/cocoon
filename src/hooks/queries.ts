@@ -10,7 +10,7 @@
  *   ['me'] / ['reminder'] — singletons
  */
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 import type {
   CalendarResponse,
@@ -43,10 +43,13 @@ export function useMe() {
   });
 }
 
-export function useEntries(cursor?: string) {
-  return useQuery({
-    queryKey: ['entries', cursor ?? null],
-    queryFn: () => api.get<EntriesListResponse>('/entries', { cursor: cursor ?? null }),
+export function useEntries() {
+  return useInfiniteQuery({
+    queryKey: ['entries'],
+    queryFn: ({ pageParam }: { pageParam: string | undefined }) =>
+      api.get<EntriesListResponse>('/entries', { cursor: pageParam ?? null }),
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: (lastPage) => lastPage.next_cursor ?? undefined,
   });
 }
 

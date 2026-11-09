@@ -4,7 +4,7 @@ A walkthrough of Cocoon with screenshots of the real app. Claude Code updates th
 step that adds or changes a screen (see CLAUDE.md → "User journey document").
 Screenshots: `docs/journey/` · Spec: `docs/SPEC.md` · Original mockups: `docs/mockups/`
 
-**Last updated:** step 5 (sign-in + route guards) · **Build step:** 5 of 21
+**Last updated:** step 7 (Home: record your day) · **Build step:** 7 of 21
 
 ## The journey at a glance
 
@@ -52,25 +52,29 @@ The mock session lives in `localStorage` under `cocoon.session.v1` — clear
 that key in DevTools to simulate a signed-out visitor.
 
 ## 2. Today's page
-![Today's page on phone](journey/02-home-default-phone.png)
-[Laptop view](journey/02-home-default-laptop.png)
+![Today's page on phone](journey/02-home-idle-phone.png)
+[Laptop view](journey/02-home-idle-laptop.png)
 
-**What you see:** the Cocoon header — small clay "COCOON" label, large serif
-"Today's page" title (with today's date next to it on laptop), three round
-quick-action buttons (Reminder / Mood calendar / Memories), and the avatar
-menu — sitting on the off-white dotted paper background. Below it is an empty
-paper-sheet card where the mic and past entries will live.
+**What you see:** the Cocoon header (clay COCOON eyebrow, serif "Today's
+page" + today's date on laptop, three quick-action buttons, avatar), the
+big clay mic button with *"Tap and tell me about your day."* and the
+*"Rather type it?"* link underneath, then the **Past entries** list of
+your journal cards.
 
-**What you can do:** open the Mood calendar and Memory wall from the header;
-open the account menu (items show a "Coming in step 12" toast for now).
+**What you can do:** tap the mic to record (next section), tap *Rather
+type it?* to write instead, tap any past entry to open it, tap *Show
+earlier pages* at the bottom to load older entries.
 
-**States:** default (shown above). Recording / writing / past-entry states
-come in step 7.
+**States:** idle (shown above) · recording (mockup `03-recording`,
+not auto-screenshotted — needs real mic input) · writing (mockup
+`04-writing-entry`, same) · permission-denied · failed-write (editable
+Try again card).
 
-**Next:** → Recording (step 7).
+**Next:** → Recording (3) or → Reading an entry (6).
 
-**Built in:** step 3 (shell) · **Notes:** mic card, "Rather type it?", and
-past entries are the heart of this screen and land in step 7.
+**Built in:** step 7 · **Notes:** mockup 02's two language pickers are
+out (English-only MVP; single picker in the account menu in step 12).
+The locked past-entry card hides the title, mood, and photos.
 
 ## 3. Recording
 _Coming in step 7._ (SPEC §2.2 · mockup `03-recording`)
@@ -79,7 +83,27 @@ _Coming in step 7._ (SPEC §2.2 · mockup `03-recording`)
 _Coming in step 7._ (SPEC §2.2 · mockup `04-writing-entry`)
 
 ## 5. Past entries
-_Coming in step 7._ (SPEC §2.3 · mockup `05-past-entries`)
+Captured in-line on section 2 above (the list lives on Home, mockup `05`).
+
+**Card layout:** a 72–80 px rounded thumbnail of the first photo (or a
+parchment square with a note icon if the entry has no photos), a short
+date eyebrow (*"Wed, 4 Nov 2026"*), the serif title truncated to one
+line, a mood badge pill, and a camera icon with the photo count when
+present. Chevron at the right.
+
+**Locked variant:** no thumbnail (parchment square + lock icon),
+*"A private entry"* in italic serif, grey "Locked" badge.
+
+**Count on the right:** "6 pages" — `total_count` from the API.
+
+**Pagination:** 20 at a time. When there are more pages, a *Show
+earlier pages* button appears at the bottom and loads the next page
+without leaving Home.
+
+**Empty state:** *"Your first page starts here. Tap the mic above when
+you're ready."*
+
+**Built in:** step 7.
 
 ## 6. Reading and editing an entry
 _Coming in step 8._ (SPEC §2.4 · mockups `06`–`09`)

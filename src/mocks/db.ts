@@ -125,6 +125,7 @@ function sortedEntries(): Entry[] {
 export function listEntries(cursor?: string): {
   entries: EntrySummary[];
   next_cursor: string | null;
+  total_count: number;
 } {
   const all = sortedEntries();
   const start = cursor ? all.findIndex((e) => e.id === cursor) + 1 : 0;
@@ -133,6 +134,7 @@ export function listEntries(cursor?: string): {
   return {
     entries: page.map(toSummary),
     next_cursor: next,
+    total_count: all.length,
   };
 }
 

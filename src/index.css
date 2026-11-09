@@ -109,6 +109,88 @@
   );
 }
 
+/* ---- Home-page animations (step 7) ---------------------------------
+   All four keyframes are opt-in via the `.cocoon-*` classes below.
+   The `@media (prefers-reduced-motion: reduce)` block earlier in this
+   file zeroes animation-duration, so they are automatically disabled
+   for users who ask for less motion.                                  */
+
+@keyframes cocoon-breath {
+  0% {
+    transform: translate(-50%, -50%) scale(0.95);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes cocoon-glide {
+  0% {
+    transform: translateX(-6px) rotate(-4deg);
+  }
+  100% {
+    transform: translateX(6px) rotate(4deg);
+  }
+}
+
+@keyframes cocoon-dot {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+@keyframes cocoon-caret {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.cocoon-breath-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 9999px;
+  border: 2px solid var(--color-recording);
+  animation: cocoon-breath 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  pointer-events: none;
+}
+
+.cocoon-glide {
+  animation: cocoon-glide 2.4s ease-in-out infinite alternate;
+  transform-origin: center;
+}
+
+.cocoon-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--color-clay);
+  animation: cocoon-dot 0.9s ease-in-out infinite;
+}
+
+.cocoon-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 2px;
+  background: var(--color-ink);
+  vertical-align: text-bottom;
+  animation: cocoon-caret 1s step-end infinite;
+}
+
 /* Respect the OS "reduce motion" preference. */
 @media (prefers-reduced-motion: reduce) {
   *,

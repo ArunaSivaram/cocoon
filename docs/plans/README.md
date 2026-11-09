@@ -14,3 +14,4 @@ what shipped, the plan is a recipe for doing it again.
 | 04 — Types + API client + MSW | `step-04-types-and-mocks.md` | `../build-log/step-04-types-and-mocks.md` |
 | 05 — Sign-in + route guards | `step-05-signin.md` | `../build-log/step-05-signin.md` |
 | 06 — Recording hooks + /dev/mic | `step-06-recording-hooks.md` | `../build-log/step-06-recording-hooks.md` |
+| 07 — Home: record your day | `step-07-home.md` | `../build-log/step-07-home.md` |

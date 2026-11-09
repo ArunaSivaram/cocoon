@@ -100,6 +100,8 @@ export interface EntrySummaryLocked {
 export interface EntriesListResponse {
   entries: EntrySummary[];
   next_cursor: string | null;
+  /** Total number of entries in the user's journal (locked + unlocked). */
+  total_count: number;
 }
 
 export interface CreateEntryRequest {
