@@ -4,7 +4,7 @@ A walkthrough of Cocoon with screenshots of the real app. Claude Code updates th
 step that adds or changes a screen (see CLAUDE.md → "User journey document").
 Screenshots: `docs/journey/` · Spec: `docs/SPEC.md` · Original mockups: `docs/mockups/`
 
-**Last updated:** step 3 (design system + app shell) · **Build step:** 3 of 21
+**Last updated:** step 5 (sign-in + route guards) · **Build step:** 5 of 21
 
 ## The journey at a glance
 
@@ -28,7 +28,28 @@ flowchart LR
 ---
 
 ## 1. Sign in
-_Coming in step 5._ (SPEC §2.1 · mockup `01-sign-in`)
+![Sign in on phone](journey/01-sign-in-default-phone.png)
+[Laptop view](journey/01-sign-in-default-laptop.png)
+
+**What you see:** a centred card on the dotted paper background with a clay
+mic, the COCOON eyebrow, the serif heading *"Tell me about your day."*, a
+warm subline, four bullets (talk, your own words + a reflection, lock any
+page, mood calendar), a **Continue with Google** button, and a short
+footer about privacy.
+
+**What you can do:** tap *Continue with Google*. The button shows a spinner
+for about half a second (mocked), then you land on Today's page. If you
+tried to reach a protected URL first (e.g. `/calendar`), you bounce there
+after signing in instead of landing on home.
+
+**States:** default · loading (button disabled, spinner next to
+*"Signing in…"*). Error toast is wired but can't trigger with the mock.
+
+**Next:** → Today's page.
+
+**Built in:** step 5 · **Notes:** real Google OAuth arrives in step 15.
+The mock session lives in `localStorage` under `cocoon.session.v1` — clear
+that key in DevTools to simulate a signed-out visitor.
 
 ## 2. Today's page
 ![Today's page on phone](journey/02-home-default-phone.png)

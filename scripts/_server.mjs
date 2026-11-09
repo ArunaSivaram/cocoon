@@ -35,6 +35,27 @@ export const VIEWPORTS = {
 
 export async function waitForFontsAndPaint(page) {
   await page.evaluate(() => document.fonts.ready);
-  // Small settle for any transition the OS-reduced-motion rule hasn't zeroed.
   await page.waitForTimeout(150);
 }
+
+/**
+ * Keep this in sync with src/lib/auth.ts — same storage key, same session
+ * shape. Playwright injects it via addInitScript before any page JS runs,
+ * so the route guard sees "signed in" on the very first render.
+ */
+export const SIGNED_IN_INIT_SCRIPT = `
+  try {
+    localStorage.setItem(
+      'cocoon.session.v1',
+      JSON.stringify({
+        accessToken: 'mock-dev-token',
+        user: {
+          id: '00000000-0000-4000-8000-000000000001',
+          name: 'Test User',
+          email: 'test@cocoon.local',
+          avatarUrl: null,
+        },
+      }),
+    );
+  } catch {}
+`;

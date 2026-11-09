@@ -4,15 +4,52 @@ import { Home } from '@/pages/Home';
 import { Entry } from '@/pages/Entry';
 import { MoodCalendar } from '@/pages/MoodCalendar';
 import { MemoryWall } from '@/pages/MemoryWall';
+import { RequireAuth } from './RequireAuth';
+import { RedirectIfSignedIn } from './RedirectIfSignedIn';
 
 export function AppRoutes() {
   return (
     <Routes>
-      <Route path="/signin" element={<SignIn />} />
-      <Route path="/" element={<Home />} />
-      <Route path="/entry/:id" element={<Entry />} />
-      <Route path="/calendar" element={<MoodCalendar />} />
-      <Route path="/memories" element={<MemoryWall />} />
+      <Route
+        path="/signin"
+        element={
+          <RedirectIfSignedIn>
+            <SignIn />
+          </RedirectIfSignedIn>
+        }
+      />
+      <Route
+        path="/"
+        element={
+          <RequireAuth>
+            <Home />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/entry/:id"
+        element={
+          <RequireAuth>
+            <Entry />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/calendar"
+        element={
+          <RequireAuth>
+            <MoodCalendar />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/memories"
+        element={
+          <RequireAuth>
+            <MemoryWall />
+          </RequireAuth>
+        }
+      />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

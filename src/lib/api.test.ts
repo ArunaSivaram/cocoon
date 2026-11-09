@@ -2,14 +2,22 @@ import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { server } from '@/mocks/server';
 import { resetDb } from '@/mocks/db';
 import { api, APIError } from './api';
+import { signIn, signOut } from './auth';
 import type { EntriesListResponse, Entry, Profile } from './types';
 
-beforeAll(() => server.listen({ onUnhandledFrame: 'error' }));
+beforeAll(async () => {
+  server.listen({ onUnhandledFrame: 'error' });
+  // api.ts now requires a session; sign in once for the whole suite.
+  await signIn();
+});
 afterEach(() => {
   server.resetHandlers();
   resetDb();
 });
-afterAll(() => server.close());
+afterAll(() => {
+  signOut();
+  server.close();
+});
 
 describe('api.get', () => {
   it('returns the profile', async () => {

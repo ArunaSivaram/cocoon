@@ -1,3 +1,5 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
@@ -8,15 +10,25 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { getSession } from '@/lib/auth';
+import { useAuth } from '@/hooks/useAuth';
+import { signOut } from '@/lib/auth';
 
 const comingSoon = () => toast('Coming in step 12');
 
 export function AccountMenu() {
-  const session = getSession();
+  const { session } = useAuth();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
   const name = session?.user.name ?? 'Signed out';
   const email = session?.user.email ?? '';
   const initial = name.charAt(0).toUpperCase() || '·';
+
+  function handleSignOut() {
+    signOut();
+    queryClient.clear();
+    navigate('/signin', { replace: true });
+  }
 
   return (
     <DropdownMenu>
@@ -40,7 +52,7 @@ export function AccountMenu() {
         <DropdownMenuItem onSelect={comingSoon}>Export my journal</DropdownMenuItem>
         <DropdownMenuItem onSelect={comingSoon}>Delete my account</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onSelect={comingSoon}>Sign out</DropdownMenuItem>
+        <DropdownMenuItem onSelect={handleSignOut}>Sign out</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
