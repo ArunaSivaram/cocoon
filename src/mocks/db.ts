@@ -37,7 +37,8 @@ export type DbResult<T> =
         | 'rate_limited'
         | 'too_many_photos'
         | 'conflict'
-        | 'bad_request';
+        | 'bad_request'
+        | 'unauthorized';
       message: string;
     };
 
@@ -55,6 +56,8 @@ const UNLOCK_MAX_ATTEMPTS = 5;
 const TEST_REMINDER_COOLDOWN_MS = 60 * 1000;
 const MAX_PHOTOS_PER_ENTRY = 2;
 const PAGE_SIZE = 20;
+/** SPEC §2.5 — forgot-delete requires a sign-in within this window. */
+const RECENT_SIGNIN_WINDOW_MS = 10 * 60 * 1000;
 
 function freshState(): DbState {
   return {
@@ -262,13 +265,25 @@ export function removeLock(id: string, passcode: string): DbResult<Entry> {
 
 export function deleteEntry(
   id: string,
-  req: { passcode?: string; forgot?: boolean },
+  req: { passcode?: string; forgot?: boolean; signed_in_at?: string },
+  now = Date.now(),
 ): DbResult<void> {
   const entry = state.entries.get(id);
   if (!entry) return notFound('Entry not found.');
   if (entry.is_locked) {
     if (req.forgot === true) {
-      // Mock accepts the "forgot passcode" escape hatch.
+      // SPEC §2.5 — the forgot-passcode escape hatch requires a recent
+      // sign-in (within 10 min). The real step-17 server reads this from
+      // the Supabase session; the mock trusts the client-sent timestamp.
+      const signedInAt = req.signed_in_at ? Date.parse(req.signed_in_at) : NaN;
+      if (Number.isNaN(signedInAt) || now - signedInAt > RECENT_SIGNIN_WINDOW_MS) {
+        return {
+          ok: false,
+          status: 401,
+          code: 'unauthorized',
+          message: 'Please sign in again.',
+        };
+      }
     } else if (req.passcode) {
       const expected = state.passcodes.get(id);
       if (expected !== req.passcode) {
@@ -499,4 +514,5 @@ export const DB_CONSTANTS = {
   TEST_REMINDER_COOLDOWN_MS,
   MAX_PHOTOS_PER_ENTRY,
   PAGE_SIZE,
+  RECENT_SIGNIN_WINDOW_MS,
 };

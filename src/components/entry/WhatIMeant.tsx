@@ -2,20 +2,28 @@ import { Quote, Sparkles } from 'lucide-react';
 import { EditableBlock } from './EditableBlock';
 import { useInlineEdit } from '@/hooks/useInlineEdit';
 import { useUpdateEntry } from '@/hooks/queries';
+import { useSessionPasscode } from '@/lib/sessionPasscodes';
 import type { Entry } from '@/lib/types';
 
 export function WhatIMeant({ entry }: { entry: Entry }) {
   const update = useUpdateEntry(entry.id);
+  const passcode = useSessionPasscode(entry.id);
   const interpretationEdit = useInlineEdit<string>({
     initial: entry.interpretation,
     onSave: async (next) => {
-      await update.mutateAsync({ interpretation: next });
+      await update.mutateAsync({
+        interpretation: next,
+        ...(entry.is_locked ? { passcode } : {}),
+      });
     },
   });
   const reflectionEdit = useInlineEdit<string>({
     initial: entry.reflection,
     onSave: async (next) => {
-      await update.mutateAsync({ reflection: next });
+      await update.mutateAsync({
+        reflection: next,
+        ...(entry.is_locked ? { passcode } : {}),
+      });
     },
   });
 

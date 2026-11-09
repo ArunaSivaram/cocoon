@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 import { useDeletePhoto, useUploadPhoto } from '@/hooks/queries';
 import { isApiError } from '@/lib/api';
 import { resizeImageToJpeg } from '@/lib/resizeImage';
+import { useSessionPasscode } from '@/lib/sessionPasscodes';
 import type { Photo } from '@/lib/types';
 import { PhotoViewer } from './PhotoViewer';
 import { RemovePhotoDialog } from './RemovePhotoDialog';
@@ -13,6 +14,9 @@ const MAX_PHOTOS = 2;
 interface MemoriesProps {
   entryId: string;
   photos: Photo[];
+  /** True when the containing entry is currently private. Only then do we
+   *  thread the session passcode into upload/delete mutations. */
+  isLocked: boolean;
 }
 
 /**
@@ -25,13 +29,14 @@ interface MemoriesProps {
  * - × on a thumbnail → confirm dialog → delete.
  * - The dashed "Add a photo…" button disappears when the entry has 2 photos.
  */
-export function Memories({ entryId, photos }: MemoriesProps) {
+export function Memories({ entryId, photos, isLocked }: MemoriesProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [viewerStart, setViewerStart] = useState<number | null>(null);
   const [pendingRemove, setPendingRemove] = useState<Photo | null>(null);
 
   const upload = useUploadPhoto(entryId);
   const remove = useDeletePhoto(entryId);
+  const passcode = useSessionPasscode(entryId);
 
   const count = photos.length;
   const canAdd = count < MAX_PHOTOS && !upload.isPending;
@@ -39,7 +44,7 @@ export function Memories({ entryId, photos }: MemoriesProps) {
   async function handleFile(file: File) {
     try {
       const jpeg = await resizeImageToJpeg(file);
-      await upload.mutateAsync({ file: jpeg });
+      await upload.mutateAsync({ file: jpeg, ...(isLocked ? { passcode } : {}) });
       toast.success('Photo added.');
     } catch (err) {
       toast.error(uploadErrorMessage(err));
@@ -53,7 +58,10 @@ export function Memories({ entryId, photos }: MemoriesProps) {
   async function confirmRemove() {
     if (!pendingRemove) return;
     try {
-      await remove.mutateAsync({ photoId: pendingRemove.id });
+      await remove.mutateAsync({
+        photoId: pendingRemove.id,
+        ...(isLocked ? { passcode } : {}),
+      });
       toast.success('Photo removed.');
       setPendingRemove(null);
     } catch {

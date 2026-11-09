@@ -2,14 +2,16 @@ import { PencilLine, Plus } from 'lucide-react';
 import { EditableBlock } from './EditableBlock';
 import { useInlineEdit } from '@/hooks/useInlineEdit';
 import { useUpdateEntry } from '@/hooks/queries';
+import { useSessionPasscode } from '@/lib/sessionPasscodes';
 import type { Entry } from '@/lib/types';
 
 export function MyNotes({ entry }: { entry: Entry }) {
   const update = useUpdateEntry(entry.id);
+  const passcode = useSessionPasscode(entry.id);
   const edit = useInlineEdit<string>({
     initial: entry.notes,
     onSave: async (next) => {
-      await update.mutateAsync({ notes: next });
+      await update.mutateAsync({ notes: next, ...(entry.is_locked ? { passcode } : {}) });
     },
   });
 

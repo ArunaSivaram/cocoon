@@ -2,14 +2,16 @@ import { useState } from 'react';
 import { EditableBlock } from './EditableBlock';
 import { useInlineEdit } from '@/hooks/useInlineEdit';
 import { useUpdateEntry } from '@/hooks/queries';
+import { useSessionPasscode } from '@/lib/sessionPasscodes';
 import type { Entry } from '@/lib/types';
 
 export function InMyWords({ entry }: { entry: Entry }) {
   const update = useUpdateEntry(entry.id);
+  const passcode = useSessionPasscode(entry.id);
   const edit = useInlineEdit<string>({
     initial: entry.body,
     onSave: async (next) => {
-      await update.mutateAsync({ body: next });
+      await update.mutateAsync({ body: next, ...(entry.is_locked ? { passcode } : {}) });
     },
   });
   const [showTranscript, setShowTranscript] = useState(false);

@@ -1,14 +1,16 @@
 import { EditableBlock } from './EditableBlock';
 import { useInlineEdit } from '@/hooks/useInlineEdit';
 import { useUpdateEntry } from '@/hooks/queries';
+import { useSessionPasscode } from '@/lib/sessionPasscodes';
 import type { Entry } from '@/lib/types';
 
 export function EditableTitle({ entry }: { entry: Entry }) {
   const update = useUpdateEntry(entry.id);
+  const passcode = useSessionPasscode(entry.id);
   const edit = useInlineEdit<string>({
     initial: entry.title,
     onSave: async (next) => {
-      await update.mutateAsync({ title: next });
+      await update.mutateAsync({ title: next, ...(entry.is_locked ? { passcode } : {}) });
     },
   });
 

@@ -35,13 +35,18 @@ export const VIEWPORTS = {
 
 export async function waitForFontsAndPaint(page) {
   await page.evaluate(() => document.fonts.ready);
-  await page.waitForTimeout(150);
+  // Give MSW + React a moment to resolve queries and swap out skeletons
+  // before we snapshot. 150 ms wasn't enough for the step-10 locked screen.
+  await page.waitForTimeout(400);
 }
 
 /**
  * Keep this in sync with src/lib/auth.ts — same storage key, same session
  * shape. Playwright injects it via addInitScript before any page JS runs,
  * so the route guard sees "signed in" on the very first render.
+ *
+ * `signed_in_at` is set to "now" so step-10 flows that gate on recent
+ * sign-in (forgot-passcode delete) don't force a re-sign-in during tests.
  */
 export const SIGNED_IN_INIT_SCRIPT = `
   try {
@@ -55,6 +60,7 @@ export const SIGNED_IN_INIT_SCRIPT = `
           email: 'test@cocoon.local',
           avatarUrl: null,
         },
+        signed_in_at: new Date().toISOString(),
       }),
     );
   } catch {}

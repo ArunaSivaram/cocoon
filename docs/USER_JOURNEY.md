@@ -4,7 +4,7 @@ A walkthrough of Cocoon with screenshots of the real app. Claude Code updates th
 step that adds or changes a screen (see CLAUDE.md → "User journey document").
 Screenshots: `docs/journey/` · Spec: `docs/SPEC.md` · Original mockups: `docs/mockups/`
 
-**Last updated:** step 9 (Memories — photos) · **Build step:** 9 of 21
+**Last updated:** step 10 (Lock / unlock / delete) · **Build step:** 10 of 21
 
 ## The journey at a glance
 
@@ -171,7 +171,60 @@ won't survive a page refresh. Real Supabase Storage URLs arrive in
 step 17.
 
 ## 8. Locking a page
-_Coming in step 10._ (SPEC §2.5 · mockups `10`, `11`)
+![Locked entry — private screen on phone](journey/08-locked-entry-private-phone.png)
+[Private screen on laptop](journey/08-locked-entry-private-laptop.png)
+
+**What you see:** when you open a private page (fixture passcode `1234`,
+or any entry you locked yourself), it opens to a small, calm card —
+clay lock icon, *"This page is private"* in serif, *"Enter your
+passcode to read it."* underneath, and two buttons: **Unlock** (clay)
+and **Delete** (ghost). The top bar only shows *Back to journal* while
+you're on this screen — Lock/Delete-in-the-top-bar live inside the
+dialog instead.
+
+**What you can do:**
+- **Unlock** → *Unlock entry* dialog (layout matches mockup 11):
+  single numeric field, Unlock + Cancel. Right code → the paper sheet
+  opens; wrong code → the dialog **shakes** and shows *"That passcode
+  isn't right."*. After 5 wrong tries in 15 minutes it swaps for
+  *"Too many tries. Please wait 15 minutes."* until the window clears.
+- **Delete (from private screen)** → a two-mode dialog: enter the
+  passcode to delete, or tap *Forgot passcode?* → type **DELETE** to
+  confirm. The forgot path also checks that you've signed in within
+  the last 10 minutes — if not, it asks you to sign in again first.
+- Once unlocked, the top bar swaps to **Remove lock** + **Delete**.
+  The passcode is kept in memory only; refresh the tab and the page
+  is private again.
+
+**Locking an unlocked page:**
+- From any unlocked entry, tap **Lock** in the top bar → *Lock this
+  page* dialog with two 4–8 digit fields and the warning *"If you
+  forget it, this page can't be read again. You can still delete it."*
+  On success, a *"This page is now private."* toast confirms and
+  the top bar swaps to **Remove lock**. You stay on the page
+  (unlocked-for-this-visit).
+
+**Remove lock:** opens a warm confirm (*"Remove the lock on this
+page? This page will no longer be private. You can lock it again
+later."*) with **Keep locked** / **Remove lock**. No re-prompt —
+we use the passcode already in session memory.
+
+**Delete (unlocked entry):** *"Delete this page? Once it's gone, you
+can't get it back."* with **Keep** / **Delete**. On delete →
+navigate back to Home + toast *"Page deleted."*.
+
+**States:** private screen · unlock dialog · unlock wrong-passcode
+(shake + error) · unlock rate-limited · lock dialog · remove-lock
+confirm · delete-unlocked confirm · delete-locked passcode path ·
+delete-locked forgot-DELETE path · sign-in-required gate.
+
+**Next:** → Mood calendar (step 11), Home, or anywhere else from
+the top bar.
+
+**Built in:** step 10 · **Notes:** passcodes are stored in plain text
+in the mock (PBKDF2-SHA256 lands in step 17). The "recent sign-in"
+check is a 10-minute client+mock gate; the real server enforcement
+arrives in step 17 via the Supabase session.
 
 ## 9. Mood calendar
 _Coming in step 11._ (SPEC §2.6 · mockup `12-mood-calendar`)

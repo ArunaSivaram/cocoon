@@ -186,6 +186,38 @@
   }
 }
 
+/* Short horizontal shake — used for the wrong-passcode unlock dialog
+   (SPEC §2.5, CLAUDE.md "shake on wrong passcode"). The global
+   prefers-reduced-motion rule below zeroes the duration. */
+@keyframes cocoon-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  15% {
+    transform: translateX(-8px);
+  }
+  30% {
+    transform: translateX(7px);
+  }
+  45% {
+    transform: translateX(-5px);
+  }
+  60% {
+    transform: translateX(4px);
+  }
+  75% {
+    transform: translateX(-2px);
+  }
+  90% {
+    transform: translateX(1px);
+  }
+}
+
+.cocoon-shake {
+  animation: cocoon-shake 0.4s ease-in-out;
+}
+
 .cocoon-breath-ring {
   position: absolute;
   top: 50%;

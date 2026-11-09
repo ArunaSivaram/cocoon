@@ -153,10 +153,27 @@ describe('deleteEntry', () => {
     expect(r.ok).toBe(false);
   });
 
-  it('accepts a forgot flag on a locked entry', () => {
-    const r = deleteEntry(LOCKED_ID, { forgot: true });
+  it('accepts a forgot flag on a locked entry when sign-in is recent', () => {
+    const r = deleteEntry(LOCKED_ID, {
+      forgot: true,
+      signed_in_at: new Date().toISOString(),
+    });
     expect(r.ok).toBe(true);
     expect(getEntryRaw(LOCKED_ID)).toBeUndefined();
+  });
+
+  it('rejects a forgot flag when the sign-in is older than 10 minutes', () => {
+    const stale = new Date(Date.now() - 11 * 60 * 1000).toISOString();
+    const r = deleteEntry(LOCKED_ID, { forgot: true, signed_in_at: stale });
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.code).toBe('unauthorized');
+    expect(getEntryRaw(LOCKED_ID)).toBeDefined();
+  });
+
+  it('rejects a forgot flag with no signed_in_at at all', () => {
+    const r = deleteEntry(LOCKED_ID, { forgot: true });
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.code).toBe('unauthorized');
   });
 });
 

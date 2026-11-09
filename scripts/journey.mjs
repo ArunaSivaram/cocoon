@@ -38,6 +38,16 @@ const SCREENS = [
     path: '/entry/44444444-4444-4444-8444-444444444444',
     requireAuth: true,
   },
+  // Sixth fixture — "A Hard Conversation", locked (passcode 1234). Drops
+  // us on mockup 10's "This page is private" screen with Unlock + Delete
+  // actions (step 10).
+  {
+    num: '08',
+    name: 'locked-entry',
+    state: 'private',
+    path: '/entry/66666666-6666-4666-8666-666666666666',
+    requireAuth: true,
+  },
   // Recording and writing states need real mic input — captured manually
   // on real devices for USER_JOURNEY until we add a dev-param forcing
   // state. Mockups 03 and 04 cover the design intent.

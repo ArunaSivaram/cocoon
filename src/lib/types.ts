@@ -133,7 +133,14 @@ export interface RemoveLockRequest {
   passcode: string;
 }
 
-export type DeleteEntryRequest = { passcode?: string } | { forgot: true };
+/**
+ * SPEC §5 — POST /api/entries/:id/delete. The `forgot` path requires a
+ * recent sign-in; in mock mode the client sends the session's
+ * `signed_in_at` so the mock can enforce the 10-minute window too.
+ */
+export type DeleteEntryRequest =
+  | { passcode?: string }
+  | { forgot: true; signed_in_at: ISODateTime };
 
 // ---------- Upload + transcription (SPEC §5 /api/audio/upload-url, /api/transcribe) ----------
 

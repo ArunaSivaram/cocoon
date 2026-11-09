@@ -19,17 +19,30 @@ export interface SessionUser {
 export interface Session {
   accessToken: string;
   user: SessionUser;
+  /**
+   * ISO-8601 timestamp of when the session was established. Checked by the
+   * "Forgot passcode" delete path (SPEC §2.5 / §5 — "requires a sign-in
+   * within the last 10 minutes"). Missing on pre-step-10 sessions, which
+   * are treated as stale.
+   */
+  signed_in_at?: string;
 }
 
-const MOCK_SESSION: Session = {
-  accessToken: 'mock-dev-token',
-  user: {
-    id: '00000000-0000-4000-8000-000000000001',
-    name: 'Test User',
-    email: 'test@cocoon.local',
-    avatarUrl: null,
-  },
-};
+/** SPEC §2.5 — forgot-delete requires a sign-in within this window. */
+export const RECENT_SIGNIN_WINDOW_MS = 10 * 60 * 1000;
+
+function makeMockSession(): Session {
+  return {
+    accessToken: 'mock-dev-token',
+    user: {
+      id: '00000000-0000-4000-8000-000000000001',
+      name: 'Test User',
+      email: 'test@cocoon.local',
+      avatarUrl: null,
+    },
+    signed_in_at: new Date().toISOString(),
+  };
+}
 
 // Identity-stable snapshot cache. useSyncExternalStore requires the same
 // reference back for the same underlying value — if we re-parsed the JSON
@@ -84,8 +97,9 @@ export function onAuthChange(listener: () => void): () => void {
 
 export async function signIn(): Promise<Session> {
   await new Promise((resolve) => setTimeout(resolve, MOCK_SIGN_IN_DELAY_MS));
+  const session = makeMockSession();
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(MOCK_SESSION));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
     if (!localStorage.getItem(FIRST_SIGNIN_KEY)) {
       localStorage.setItem(FIRST_SIGNIN_KEY, '1');
     }
@@ -94,7 +108,25 @@ export async function signIn(): Promise<Session> {
   }
   syncCache();
   emit();
-  return MOCK_SESSION;
+  return session;
+}
+
+/**
+ * Returns the current session's sign-in timestamp (ms) if present, else null.
+ * The "Forgot passcode" delete flow uses this to decide whether to force a
+ * re-sign-in first.
+ */
+export function getRecentSignInAt(): number | null {
+  const session = getSession();
+  if (!session?.signed_in_at) return null;
+  const t = Date.parse(session.signed_in_at);
+  return Number.isNaN(t) ? null : t;
+}
+
+export function isSignInRecent(windowMs = RECENT_SIGNIN_WINDOW_MS): boolean {
+  const t = getRecentSignInAt();
+  if (t === null) return false;
+  return Date.now() - t <= windowMs;
 }
 
 export function signOut(): void {
