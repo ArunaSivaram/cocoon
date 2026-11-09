@@ -14,6 +14,7 @@ export default tseslint.config(
       '.vite',
       'coverage',
       'shots',
+      'public',
     ],
   },
   {
@@ -38,6 +39,14 @@ export default tseslint.config(
         'error',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
       ],
+    },
+  },
+  {
+    // shadcn-generated components ship with helper exports alongside the
+    // component — fine for them, so relax the react-refresh rule here.
+    files: ['src/components/ui/**/*.{ts,tsx}'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
     },
   },
 );

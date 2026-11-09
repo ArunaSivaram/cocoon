@@ -4,7 +4,7 @@ A walkthrough of Cocoon with screenshots of the real app. Claude Code updates th
 step that adds or changes a screen (see CLAUDE.md → "User journey document").
 Screenshots: `docs/journey/` · Spec: `docs/SPEC.md` · Original mockups: `docs/mockups/`
 
-**Last updated:** _not started_ · **Build step:** 0 of 21
+**Last updated:** step 3 (design system + app shell) · **Build step:** 3 of 21
 
 ## The journey at a glance
 
@@ -31,7 +31,25 @@ flowchart LR
 _Coming in step 5._ (SPEC §2.1 · mockup `01-sign-in`)
 
 ## 2. Today's page
-_Coming in step 7._ (SPEC §2.2 · mockup `02-home`)
+![Today's page on phone](journey/02-home-default-phone.png)
+[Laptop view](journey/02-home-default-laptop.png)
+
+**What you see:** the Cocoon header — small clay "COCOON" label, large serif
+"Today's page" title (with today's date next to it on laptop), three round
+quick-action buttons (Reminder / Mood calendar / Memories), and the avatar
+menu — sitting on the off-white dotted paper background. Below it is an empty
+paper-sheet card where the mic and past entries will live.
+
+**What you can do:** open the Mood calendar and Memory wall from the header;
+open the account menu (items show a "Coming in step 12" toast for now).
+
+**States:** default (shown above). Recording / writing / past-entry states
+come in step 7.
+
+**Next:** → Recording (step 7).
+
+**Built in:** step 3 (shell) · **Notes:** mic card, "Rather type it?", and
+past entries are the heart of this screen and land in step 7.
 
 ## 3. Recording
 _Coming in step 7._ (SPEC §2.2 · mockup `03-recording`)

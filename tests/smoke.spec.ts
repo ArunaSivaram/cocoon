@@ -1,8 +1,9 @@
 import { expect, test } from '@playwright/test';
 
-test('home placeholder renders', async ({ page }) => {
+test('home page renders the shared header', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'Home' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: "Today's page" })).toBeVisible();
+  await expect(page.getByText('COCOON')).toBeVisible();
 });
 
 test('entry route picks up :id param', async ({ page }) => {

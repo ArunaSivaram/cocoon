@@ -1,4 +1,122 @@
 @import 'tailwindcss';
 
-/* Design tokens (Tailwind v4 @theme), fonts, paper background, mood map, and
-   reduced-motion handling land in step 3 of BUILD_PLAN.md. */
+@theme {
+  /* --- Cocoon palette (CLAUDE.md §Design system) --- */
+  --color-background: #faf7f2;
+  --color-paper: #fcfaf6; /* paper sheet */
+  --color-card: #ffffff;
+  --color-ink: #2c2621;
+  --color-ink-soft: #6e6259;
+  --color-rule: #e8dfd3; /* ruled-paper lines */
+  --color-parchment: #f4ece1;
+  --color-clay: #a34e2a;
+  --color-clay-light: #b85832; /* mic gradient start */
+  --color-clay-dark: #9e4a28; /* mic gradient end */
+  --color-recording: #d33f2b;
+
+  /* --- Mood palette — matches src/lib/moods.ts --- */
+  --color-mood-green: #3f8a6e;
+  --color-mood-amber: #e0a04a;
+  --color-mood-lavender: #8a6fb8;
+  --color-mood-brown: #b08a5e;
+  --color-mood-rose: #c9584a;
+  --color-mood-grey: #b8a898;
+
+  /* --- shadcn semantic tokens mapped onto Cocoon's palette --- */
+  --color-foreground: #2c2621;
+  --color-primary: #a34e2a;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #f4ece1;
+  --color-secondary-foreground: #2c2621;
+  --color-destructive: #d33f2b;
+  --color-accent: #f4ece1;
+  --color-accent-foreground: #2c2621;
+  --color-muted: #f4ece1;
+  --color-muted-foreground: #6e6259;
+  --color-border: #e8dfd3;
+  --color-input: #e8dfd3;
+  --color-ring: #a34e2a;
+  --color-card-foreground: #2c2621;
+  --color-popover: #fcfaf6;
+  --color-popover-foreground: #2c2621;
+
+  /* --- Fonts --- */
+  --font-serif: 'Lora', ui-serif, Georgia, serif;
+  --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+
+  /* --- Shape --- */
+  --radius-card: 20px;
+  --radius-sheet: 28px;
+
+  /* --- Shadow (warm, soft) --- */
+  --shadow-soft: 0 6px 24px -12px rgba(44, 38, 33, 0.18);
+  --shadow-lift: 0 10px 32px -16px rgba(44, 38, 33, 0.22);
+}
+
+@layer base {
+  html,
+  body {
+    background-color: var(--color-background);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+  }
+  body {
+    /* Faint dotted paper texture — 1 px dots on a 20 px grid. */
+    background-image: radial-gradient(rgba(44, 38, 33, 0.06) 1px, transparent 1px);
+    background-size: 20px 20px;
+    min-height: 100dvh;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-serif);
+    color: var(--color-ink);
+  }
+}
+
+@layer components {
+  .paper-sheet {
+    background-color: var(--color-paper);
+    border-radius: var(--radius-sheet);
+    box-shadow: var(--shadow-soft);
+    border: 1px solid color-mix(in srgb, var(--color-rule) 60%, transparent);
+  }
+  .card-soft {
+    background-color: var(--color-card);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-soft);
+    border: 1px solid color-mix(in srgb, var(--color-rule) 60%, transparent);
+  }
+  .label-eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-clay);
+    font-weight: 500;
+  }
+}
+
+/* Ruled-paper lines utility — used by the "In my words" section (step 8). */
+@utility ruled-lines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 31px,
+    var(--color-rule) 31px,
+    var(--color-rule) 32px
+  );
+}
+
+/* Respect the OS "reduce motion" preference. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
