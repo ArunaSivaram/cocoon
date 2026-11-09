@@ -11,7 +11,12 @@ import {
 const ROUTES = [
   { slug: 'signin', path: '/signin', requireAuth: false },
   { slug: 'home', path: '/', requireAuth: true },
-  { slug: 'entry', path: '/entry/example', requireAuth: true },
+  // First fixture entry ("A Calming Evening Walk") — stable across sessions.
+  {
+    slug: 'entry',
+    path: '/entry/11111111-1111-4111-8111-111111111111',
+    requireAuth: true,
+  },
   { slug: 'calendar', path: '/calendar', requireAuth: true },
   { slug: 'memories', path: '/memories', requireAuth: true },
 ];

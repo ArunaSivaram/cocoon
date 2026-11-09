@@ -96,6 +96,35 @@
     color: var(--color-clay);
     font-weight: 500;
   }
+  /* Entry reading sheet — a .paper-sheet with the faint red margin line
+     (step 8). Add `entry-sheet` alongside `paper-sheet`. */
+  .entry-sheet {
+    background-color: var(--color-paper);
+    border-radius: var(--radius-sheet);
+    box-shadow: var(--shadow-soft);
+    border: 1px solid color-mix(in srgb, var(--color-rule) 60%, transparent);
+    position: relative;
+    overflow: hidden;
+    padding: 1.75rem 1.5rem 1.75rem 2.75rem;
+  }
+  .entry-sheet::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 28px;
+    width: 1px;
+    background: color-mix(in srgb, var(--color-recording) 35%, transparent);
+    pointer-events: none;
+  }
+  @media (min-width: 768px) {
+    .entry-sheet {
+      padding: 2.25rem 2.5rem 2.5rem 4rem;
+    }
+    .entry-sheet::before {
+      left: 48px;
+    }
+  }
 }
 
 /* Ruled-paper lines utility — used by the "In my words" section (step 8). */

@@ -17,3 +17,13 @@ export function formatCardDate(iso: string): string {
 export function formatHomeDate(d: Date): string {
   return format(d, 'EEEE, MMMM d');
 }
+
+/**
+ * Entry reading-view date eyebrow, e.g. "Wednesday, 4 November 2026".
+ * The uppercase + letter-spacing is done in CSS (via .label-eyebrow or
+ * similar), not in the string.
+ */
+export function formatEntryHeaderDate(iso: string): string {
+  const date = iso.includes('T') ? parseISO(iso) : parseISO(`${iso}T00:00:00`);
+  return format(date, 'EEEE, d MMMM yyyy');
+}

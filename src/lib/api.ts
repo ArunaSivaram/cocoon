@@ -25,6 +25,12 @@ export class APIError extends Error {
   }
 }
 
+/** Narrowing helper: `isApiError(err, 'locked')` → true when err is 423. */
+export function isApiError(err: unknown, code?: ApiErrorCode): err is APIError {
+  if (!(err instanceof APIError)) return false;
+  return code === undefined ? true : err.code === code;
+}
+
 interface RequestOptions {
   /** Pass `true` for /api/health which doesn't require a bearer token. */
   public?: boolean;

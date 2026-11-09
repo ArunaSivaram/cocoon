@@ -4,7 +4,7 @@ A walkthrough of Cocoon with screenshots of the real app. Claude Code updates th
 step that adds or changes a screen (see CLAUDE.md → "User journey document").
 Screenshots: `docs/journey/` · Spec: `docs/SPEC.md` · Original mockups: `docs/mockups/`
 
-**Last updated:** step 7 (Home: record your day) · **Build step:** 7 of 21
+**Last updated:** step 8 (Entry reading + inline editing) · **Build step:** 8 of 21
 
 ## The journey at a glance
 
@@ -106,7 +106,34 @@ you're ready."*
 **Built in:** step 7.
 
 ## 6. Reading and editing an entry
-_Coming in step 8._ (SPEC §2.4 · mockups `06`–`09`)
+![Entry reading on phone](journey/06-entry-reading-default-phone.png)
+[Laptop view](journey/06-entry-reading-default-laptop.png)
+
+**What you see:** a top bar with *Back to journal* (left) and *Lock* /
+*Delete* (right), then the paper sheet with a faint red margin line
+down the left. The sheet carries the date eyebrow + mood badge, a
+large serif **title**, the **In my words** body on ruled lines (with
+a *See original transcript* toggle underneath), a parchment **What I
+meant** card holding the AI interpretation + **Key reflection**, a
+**Memories** section with up to 2 photo thumbnails, and **My notes**
+at the bottom.
+
+**What you can do:** read it. Tap *Edit* under any section — the
+section swaps for a textarea (or input for the title) with × *Cancel*
+and ✓ *Save* buttons. A **"Saved."** toast confirms. Tap *See
+original transcript* to peek at the raw speech-to-text. Tap *Back to
+journal* to return home.
+
+**States:** default (shown above) · editing (textarea with Save /
+Cancel) · support-note (shown when the AI flagged the entry as heavy;
+toggle with `?support=1` for visual testing) · locked (fixture #6 —
+"This page is private" placeholder, full unlock dialog comes in
+step 10) · not-found (bad id) · generic error.
+
+**Next:** → Memory wall (step 11) or back to Home (section 2).
+
+**Built in:** step 8 · **Notes:** real photo add/remove is step 9;
+Lock / Delete buttons show a *Coming in step 10* toast for now.
 
 ## 7. Photos (Memories)
 _Coming in step 9._ (SPEC §2.4)

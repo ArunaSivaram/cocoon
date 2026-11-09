@@ -81,14 +81,15 @@ export const handlers = [
   http.post(`${API}/transcribe`, async ({ request }) => {
     const unauth = requireAuth(request);
     if (unauth) return unauth;
-    const body = (await request.json()) as TranscribeRequest;
+    // Consume the body for parity with the real handler (step 16).
+    (await request.json()) as TranscribeRequest;
     await delay(AI_DELAY_MS);
-    return HttpResponse.json<TranscribeResponse>({
-      text:
-        body.audio_path.length > 0
-          ? "I'm testing out the recording. It's working the way I expected."
-          : '',
-    });
+    // Mock mode doesn't run OpenAI Whisper — we return an empty string on
+    // purpose so the save pipeline falls back to the browser's live-speech
+    // words (SPEC §2.2 "if transcription fails, use the live words").
+    // That way dev entries contain what you actually said. Real
+    // transcription lands in step 16.
+    return HttpResponse.json<TranscribeResponse>({ text: '' });
   }),
 
   // ---- Entries ----

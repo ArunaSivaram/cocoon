@@ -20,6 +20,14 @@ import {
 const SCREENS = [
   { num: '01', name: 'sign-in', state: 'default', path: '/signin', requireAuth: false },
   { num: '02', name: 'home', state: 'idle', path: '/', requireAuth: true },
+  // First fixture — "A Calming Evening Walk". Stable id.
+  {
+    num: '06',
+    name: 'entry-reading',
+    state: 'default',
+    path: '/entry/11111111-1111-4111-8111-111111111111',
+    requireAuth: true,
+  },
   // Recording and writing states need real mic input — captured manually
   // on real devices for USER_JOURNEY until we add a dev-param forcing
   // state. Mockups 03 and 04 cover the design intent.
