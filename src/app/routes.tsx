@@ -4,6 +4,7 @@ import { Home } from '@/pages/Home';
 import { Entry } from '@/pages/Entry';
 import { MoodCalendar } from '@/pages/MoodCalendar';
 import { MemoryWall } from '@/pages/MemoryWall';
+import { DevMic } from '@/pages/DevMic';
 import { RequireAuth } from './RequireAuth';
 import { RedirectIfSignedIn } from './RedirectIfSignedIn';
 
@@ -50,6 +51,8 @@ export function AppRoutes() {
           </RequireAuth>
         }
       />
+      {/* Hidden dev page, public so it's easy to hit on a phone over HTTPS. */}
+      <Route path="/dev/mic" element={<DevMic />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
