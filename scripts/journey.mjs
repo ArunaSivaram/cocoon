@@ -20,12 +20,22 @@ import {
 const SCREENS = [
   { num: '01', name: 'sign-in', state: 'default', path: '/signin', requireAuth: false },
   { num: '02', name: 'home', state: 'idle', path: '/', requireAuth: true },
-  // First fixture — "A Calming Evening Walk". Stable id.
+  // First fixture — "A Calming Evening Walk". Stable id. Has 2 photos, so
+  // the Memories section shows the filled state with both thumbnails.
   {
     num: '06',
     name: 'entry-reading',
     state: 'default',
     path: '/entry/11111111-1111-4111-8111-111111111111',
+    requireAuth: true,
+  },
+  // Fourth fixture — "Deadline Worries Keeping Me Up". Has 0 photos, so
+  // the Memories section shows the dashed "Add a photo…" button (step 9).
+  {
+    num: '06b',
+    name: 'entry-reading',
+    state: 'empty-memories',
+    path: '/entry/44444444-4444-4444-8444-444444444444',
     requireAuth: true,
   },
   // Recording and writing states need real mic input — captured manually

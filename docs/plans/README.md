@@ -16,3 +16,4 @@ what shipped, the plan is a recipe for doing it again.
 | 06 — Recording hooks + /dev/mic | `step-06-recording-hooks.md` | `../build-log/step-06-recording-hooks.md` |
 | 07 — Home: record your day | `step-07-home.md` | `../build-log/step-07-home.md` |
 | 08 — Entry reading + inline editing | `step-08-entry-reading.md` | `../build-log/step-08-entry-reading.md` |
+| 09 — Memories (photos) | `step-09-photos.md` | `../build-log/step-09-photos.md` |

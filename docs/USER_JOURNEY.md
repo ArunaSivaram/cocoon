@@ -4,7 +4,7 @@ A walkthrough of Cocoon with screenshots of the real app. Claude Code updates th
 step that adds or changes a screen (see CLAUDE.md → "User journey document").
 Screenshots: `docs/journey/` · Spec: `docs/SPEC.md` · Original mockups: `docs/mockups/`
 
-**Last updated:** step 8 (Entry reading + inline editing) · **Build step:** 8 of 21
+**Last updated:** step 9 (Memories — photos) · **Build step:** 9 of 21
 
 ## The journey at a glance
 
@@ -132,11 +132,43 @@ step 10) · not-found (bad id) · generic error.
 
 **Next:** → Memory wall (step 11) or back to Home (section 2).
 
-**Built in:** step 8 · **Notes:** real photo add/remove is step 9;
-Lock / Delete buttons show a *Coming in step 10* toast for now.
+**Built in:** step 8 · **Notes:** Lock / Delete buttons show a *Coming
+in step 10* toast for now; the Memories section is now fully live —
+see section 7.
 
 ## 7. Photos (Memories)
-_Coming in step 9._ (SPEC §2.4)
+![Memories — filled on phone](journey/06-entry-reading-default-phone.png)
+[Filled on laptop](journey/06-entry-reading-default-laptop.png)
+![Memories — empty state on phone](journey/06b-entry-reading-empty-memories-phone.png)
+[Empty state on laptop](journey/06b-entry-reading-empty-memories-laptop.png)
+
+**What you see:** a **MEMORIES** eyebrow with a `0/2` / `1/2` / `2/2`
+counter on the right, then either a square-thumbnail grid of this
+day's photos or a dashed *"Add a photo or two from this day"* button.
+At 2/2 the dashed button disappears — the entry is full.
+
+**What you can do:** tap the dashed button → your phone's photo
+picker opens. Pick any image (even a huge iPhone HEIC — it's
+converted to JPEG and resized to at most 1600 px in your browser
+before it uploads). A thumbnail appears and you get a *"Photo
+added."* toast. Tap a thumbnail → a full-size viewer fills the
+screen; tap the backdrop, press Esc, or tap × to close. Tap the ×
+chip on a thumbnail → a warm *"Remove this photo?"* confirm asks
+before deleting.
+
+**States:** empty (`0/2`, dashed button shown) · one photo (`1/2`,
+one thumbnail + dashed button) · full (`2/2`, two thumbnails, no
+dashed button) · uploading (dashed button shows a spinner and
+*"Adding photo…"*) · viewer open (dark backdrop, image centred) ·
+remove-confirm open (Keep / Remove).
+
+**Next:** → Lock the entry (step 10) or back to Home.
+
+**Built in:** step 9 · **Notes:** the resize happens entirely in
+your browser so bytes never leave your phone un-shrunk. Photo URLs
+in mock mode are `blob:` references tied to the current tab — they
+won't survive a page refresh. Real Supabase Storage URLs arrive in
+step 17.
 
 ## 8. Locking a page
 _Coming in step 10._ (SPEC §2.5 · mockups `10`, `11`)

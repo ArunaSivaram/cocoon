@@ -6,7 +6,7 @@ import { EditableTitle } from '@/components/entry/EditableTitle';
 import { InMyWords } from '@/components/entry/InMyWords';
 import { WhatIMeant } from '@/components/entry/WhatIMeant';
 import { SupportNoteCard } from '@/components/entry/SupportNoteCard';
-import { MemoriesPlaceholder } from '@/components/entry/MemoriesPlaceholder';
+import { Memories } from '@/components/entry/Memories';
 import { MyNotes } from '@/components/entry/MyNotes';
 import { Button } from '@/components/ui/button';
 import { useEntry } from '@/hooks/queries';
@@ -64,7 +64,7 @@ export function Entry() {
         <InMyWords entry={data} />
         <WhatIMeant entry={data} />
         {showSupport && <SupportNoteCard />}
-        <MemoriesPlaceholder photos={data.photos} />
+        <Memories entryId={data.id} photos={data.photos} />
         <MyNotes entry={data} />
       </article>
     </EntryPageShell>
